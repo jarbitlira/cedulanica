@@ -3,7 +3,8 @@ var request = require('request');
 var striptags = require('striptags');
 var S = require('string');
 
-var server = app.listen(3000);
+var server = app.listen(process.env.PORT || 3000);
+
 var url = 'http://www.cse.gob.ni/components/buscarcv.php';
 
 var regexName = new RegExp('(NOMBRE:(\\s[\\w]+)+)');
