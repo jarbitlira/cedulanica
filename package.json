@@ -5,9 +5,10 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.13.3",
+    "memjs": "^0.8.7",
     "request": "^2.65.0",
-    "striptags": "^2.0.4",
-    "string": "^3.3.1"
+    "string": "^3.3.1",
+    "striptags": "^2.0.4"
   },
   "devDependencies": {},
   "scripts": {
