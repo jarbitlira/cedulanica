@@ -1,0 +1,35 @@
+{
+  "name": "cedulanica",
+  "version": "1.0.0",
+  "description": "Consulta de cédulas Nicaragüenses.",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "request": "^2.65.0",
+    "striptags": "^2.0.4",
+    "string": "^3.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarbitlira/cedulanica.git"
+  },
+  "keywords": [
+    "Cedula",
+    "Nicaragua",
+    "Nicaraguense"
+  ],
+  "author": {
+    "name": "Jarbit Lira",
+    "email": "jarbitlira@gmail.com",
+    "url": "jarbitlira.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jarbitlira/cedulanica/issues"
+  },
+  "homepage": "https://github.com/jarbitlira/cedulanica#readme"
+}
