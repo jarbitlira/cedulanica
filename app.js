@@ -19,47 +19,56 @@ var regexMunicipio = new RegExp('(MUNICIPIO: (\\w\\s*)+\\n)');
 var regexDireccion = new RegExp('(DIRECCION: [\\w\\W]+)');
 
 app.get('/', function (req, res) {
-    res.send("Consulta de cedula Nica.");
+  res.send("Consulta de cedula Nica.");
 });
 
 app.get('/cedula/:cedula', function (req, res) {
-    var params = req.params;
-    var result = {};
+  var params = req.params;
+  var result = {};
 
-    var memcachedKey = util.format('cedula_%d', params.cedula);
-    memcached.get(memcachedKey, function (err, value, key) {
-        // value is not cached
-        if (value == null) {
-            request.post(url, {form: {'tipo': 'D', cedula: params.cedula}}, function (error, response, body) {
-                try {
-                    if (response.statusCode == 200) {
-                        body = S(striptags(body)).trim(); //remove html tags
-                        result.nombre = (regexName.exec(body)[1]).split(':')[1].trim();
-                        result.cedula = (regexCedula.exec(body)[1]).split(':')[1].trim();
-                        result.departamento = (regexDepartamento.exec(body)[1]).split(':')[1].trim();
-                        result.municipio = (regexMunicipio.exec(body)[1]).split(':')[1].trim();
-                        result.direccion = (regexDireccion.exec(body)[1]).split(':')[1].trim();
+  var memcachedKey = util.format('cedula_%d', params.cedula);
+  memcached.get(memcachedKey, function (err, value, key) {
+    // value is not cached
+    if (value == null) {
+      var options = {
+        url: url,
+        form: {
+          'tipo': 'D',
+          cedula: params.cedula
+        },
+        encoding:'binary'
+      };
 
-                        // save result on memcached
-                        memcached.set(memcachedKey, JSON.stringify(result), function (err, success) {
-                            result.source = 'request';
-                            res.json({data: result});
-                        }, memcachedExpirationTime);
+      request.post(options, function (error, response, body) {
+        try {
+          if (response.statusCode == 200) {
+            body = S(striptags(body)).trim(); //remove html tags
+            result.nombre = (regexName.exec(body)[1]).split(':')[1].trim();
+            result.cedula = (regexCedula.exec(body)[1]).split(':')[1].trim();
+            result.departamento = (regexDepartamento.exec(body)[1]).split(':')[1].trim();
+            result.municipio = (regexMunicipio.exec(body)[1]).split(':')[1].trim();
+            result.direccion = (regexDireccion.exec(body)[1]).split(':')[1].trim();
 
-                    }
-                } catch (e) {
-                    res.status(404).json({error: 'Documento no encontrado'});
-                }
+            // save result on memcached
+            memcached.set(memcachedKey, JSON.stringify(result), function (err, success) {
+              result.source = 'request';
+              res.json({data: result});
+            }, memcachedExpirationTime);
 
-            });
-        } else {
-            var memcachedResponse = JSON.parse(value);
-            memcachedResponse.source = 'memcached';
-            res.json(memcachedResponse);
+          }
+        } catch (e) {
+          res.status(404).json({error: 'Documento no encontrado'});
         }
-    });
+
+      });
+    } else {
+      var memcachedResponse = JSON.parse(value);
+      memcachedResponse.source = 'memcached';
+      res.json(memcachedResponse);
+    }
+  });
 });
 
 app.all('*', function (req, res) {
-    res.send("Recurso no encontrado!");
+  res.send("Recurso no encontrado!");
 });
