@@ -1,3 +1,4 @@
+/*global process, require*/
 var app = require('express')();
 var request = require('request');
 var striptags = require('striptags');
@@ -40,26 +41,26 @@ app.get('/cedula/:cedula', function (req, res) {
       };
 
       request.post(options, function (error, response, body) {
+        if (response.statusCode != 200) {
+          return res.status(404).json({error: 'Documento no encontrado'});
+        }
+
         try {
-          if (response.statusCode == 200) {
-            body = S(striptags(body)).trim(); //remove html tags
-            result.nombre = (regexName.exec(body)[1]).split(':')[1].trim();
-            result.cedula = (regexCedula.exec(body)[1]).split(':')[1].trim();
-            result.departamento = (regexDepartamento.exec(body)[1]).split(':')[1].trim();
-            result.municipio = (regexMunicipio.exec(body)[1]).split(':')[1].trim();
-            result.direccion = (regexDireccion.exec(body)[1]).split(':')[1].trim();
+          body = S(striptags(body)).trim(); //remove html tags
+          result.nombre = (regexName.exec(body)[1]).split(':')[1].trim();
+          result.cedula = (regexCedula.exec(body)[1]).split(':')[1].trim();
+          result.departamento = (regexDepartamento.exec(body)[1]).split(':')[1].trim();
+          result.municipio = (regexMunicipio.exec(body)[1]).split(':')[1].trim();
+          result.direccion = (regexDireccion.exec(body)[1]).split(':')[1].trim();
 
-            // save result on memcached
-            memcached.set(memcachedKey, JSON.stringify(result), function (err, success) {
-              result.source = 'request';
-              res.json({data: result});
-            }, memcachedExpirationTime);
-
-          }
+          // save result on memcached
+          memcached.set(memcachedKey, JSON.stringify(result), function (err, success) {
+            result.source = 'request';
+            res.json({data: result});
+          }, memcachedExpirationTime);
         } catch (e) {
           res.status(404).json({error: 'Documento no encontrado'});
         }
-
       });
     } else {
       var memcachedResponse = JSON.parse(value);
