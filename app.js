@@ -26,7 +26,7 @@ app.get('/cedula/:cedula', function (req, res) {
   var params = req.params;
   var result = {};
 
-  var memcachedKey = util.format('cedula_%d', params.cedula);
+  var memcachedKey = util.format('cedula_%s', params.cedula);
   memcached.get(memcachedKey, function (err, value, key) {
     // value is not cached
     if (value == null) {
