@@ -27,15 +27,17 @@ app.get('/cedula/:cedula', function (req, res) {
   var params = req.params;
   var result = {};
 
-  var memcachedKey = util.format('cedula_%s', params.cedula);
+  var cedula = params.cedula.replace(/-/g, "");
+
+  var memcachedKey = util.format('cedula_%s', cedula);
   memcached.get(memcachedKey, function (err, value, key) {
     // value is not cached
     if (value == null) {
       var options = {
         url: url,
         form: {
-          'tipo': 'D',
-          cedula: params.cedula
+          tipo: 'D',
+          cedula: cedula
         },
         encoding:'binary'
       };
