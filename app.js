@@ -49,6 +49,8 @@ app.get('/cedula/:cedula', function (req, res) {
 
         try {
           body = S(striptags(body)).trim(); //remove html tags
+          body = body.replace(/  +/g, ' '); //remove more than one space between words
+
           result.nombre = (regexName.exec(body)[1]).split(':')[1].trim();
           result.cedula = (regexCedula.exec(body)[1]).split(':')[1].trim();
           result.departamento = (regexDepartamento.exec(body)[1]).split(':')[1].trim();
