@@ -11,10 +11,10 @@ var memcachedExpirationTime = (process.env.expirationTime || 60); // Default 1 m
 
 var server = app.listen(process.env.PORT || 3000);
 
-var url = 'http://www.cse.gob.ni/components/buscarcv.php';
+var url = 'http://www.cse.gob.ni/buscarcv.php';
 
 var regexName = new RegExp('(NOMBRE:(\\s[\\w]+)+)');
-var regexCedula = new RegExp('(CEDULA \/ DOCUMENTO SUPLETORIO: (\\d+){1,13}[A-Z])');
+var regexCedula = new RegExp('(CEDULA: (\\d+){1,13}[A-Z])');
 var regexDepartamento = new RegExp('(DEPARTAMENTO: (\\w\\s*)+\\n)');
 var regexMunicipio = new RegExp('(MUNICIPIO: (\\w\\s*)+\\n)');
 var regexDireccion = new RegExp('(DIRECCION: [\\w\\W]+)');
