@@ -23,7 +23,7 @@ app.get('/', function (req, res) {
   res.send("Consulta de cedula Nica.");
 });
 
-app.get('/cedula/:cedula', function (req, res) {
+app.get('/consultar/:cedula', function (req, res) {
   var params = req.params;
   var result = {};
 
